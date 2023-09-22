@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
+        <title>WS Chat</title>
+    </head>
+    <body
+        class="h-screen w-full flex items-center justify-center bg-indigo-900"
+    >
+        <div
+            class="max-h-[600px] max-w-md w-full h-full bg-white rounded-lg shadow flex flex-col gap-4 p-8"
+        >
+            <h1 class="text-center font-bold text-xl text-indigo-900">
+                WS Chat
+            </h1>
+            <div
+                class="p-4 rounded-lg bg-gray-100 border border-gray-200 flex-1 overflow-y-auto flex flex-col gap-2 w-full"
+                id="chat"
+            ></div>
+
+            <form class="flex gap-2 items-center" id="in">
+                <input
+                    type="text"
+                    class="rounded-lg border border-gray-200 p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-900 focus:ring-inset"
+                    placeholder="Type your message here..."
+                />
+                <button
+                    type="submit"
+                    class="bg-indigo-900 font-semibold text-white rounded-lg flex items-center justify-center py-2 px-4 shrink-0 hover:opacity-75 transition-opacity"
+                >
+                    Send
+                </button>
+            </form>
+        </div>
+
+        <script>
+            const socket = new WebSocket("ws://localhost:8080/chat");
+
+            const chatNode = document.getElementById("chat");
+            const inputNode = document.getElementById("in");
+
+            let sid = "";
+
+            inputNode.addEventListener("submit", (ev) => {
+                ev.preventDefault();
+
+                const message = ev.target[0].value;
+                console.log(message);
+
+                const messageNode = document.createElement("div");
+                messageNode.classList.add("flex", "gap-2", "items-start");
+
+                const usernameNode = document.createElement("p");
+                usernameNode.classList.add("font-semibold", "text-indigo-900");
+                usernameNode.innerText = "you";
+
+                const textNode = document.createElement("p");
+                textNode.innerText = message;
+
+                messageNode.appendChild(usernameNode);
+                messageNode.appendChild(textNode);
+
+                chatNode.appendChild(messageNode);
+
+                socket.send(
+                    JSON.stringify({
+                        sid: sid,
+                        msg: message,
+                    })
+                );
+
+                ev.target[0].value = "";
+            });
+
+            socket.addEventListener("message", (event) => {
+                const message = JSON.parse(event.data);
+                sid = message.sid;
+
+                const messageNode = document.createElement("div");
+                messageNode.classList.add("flex", "gap-2", "items-start");
+
+                const usernameNode = document.createElement("p");
+                usernameNode.classList.add("font-semibold", "text-black");
+                usernameNode.innerText = message.sid;
+
+                const textNode = document.createElement("p");
+                textNode.innerText = message.msg;
+
+                messageNode.appendChild(usernameNode);
+                messageNode.appendChild(textNode);
+
+                chatNode.appendChild(messageNode);
+            });
+        </script>
+    </body>
+</html>

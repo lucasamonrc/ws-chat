@@ -1,0 +1,21 @@
+{
+  "name": "ws-chat",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "css:watch": "tailwindcss -i ./src/styles/global.css -o ./public/styles.css --watch",
+    "css:build": "tailwindcss -i ./src/styles/global.css -o ./public/styles.css",
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run css:build && bun run src/index.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "tailwindcss": "^3.3.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6"
+  }
+}
