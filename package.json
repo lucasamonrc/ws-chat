@@ -9,6 +9,7 @@
     "start": "bun run css:build && bun run src/index.ts"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "latest",
     "bun-types": "latest",
     "tailwindcss": "^3.3.3"
   },

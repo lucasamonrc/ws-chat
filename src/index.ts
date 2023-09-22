@@ -8,7 +8,7 @@ interface WebSocket {
 const users: ServerWebSocket<WebSocket>[] = [];
 
 const server = Bun.serve<WebSocket>({
-    port: Bun.env.PORT || 8080,
+    port: Bun.env.PORT || 3000,
     async fetch(req, server) {
         const url = new URL(req.url);
 
